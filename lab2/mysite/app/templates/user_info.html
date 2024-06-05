@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .account{
+            width: 1200px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            box-shadow: 5 5 20px #aaa;
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px 40px;
+        }
+        .account h2{
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid" style="background-color: lightskyblue ;height: 100px">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item col-sm-4 offset-sm-2">
+                        <a class="btn btn-danger" aria-current="page" href="/login/">退出登录</a>
+                    </li>
+                    <li class="nav-item col-sm-4 offset-sm-2">
+                        <a class="btn btn-secondary" href="/root/">管理员登陆</a>
+                    </li>
+                    <li class="nav-item col-sm-4 offset-sm-2">
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#grade_info_modal">
+                            我的课程
+                        </button>
+                    </li>
+                    <li class="nav-item col-sm-4 offset-sm-2">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lesson_info_modal">
+                            进入选课
+                        </button>
+                    </li>
+                    <li class="nav-item col-sm-4 offset-sm-2">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#retake_info_modal">
+                            可重修课程
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row account" >
+        <table class="table table-striped table-hover table-bordered border-primary">
+            <thead>
+                <tr>
+                  <th scope="col">学号</th>
+                  <th scope="col">密码</th>
+                  <th scope="col">照片</th>
+                  <th scope="col">姓名</th>
+                  <th scope="col">性别</th>
+                  <th scope="col">状态</th>
+                  <th scope="col">剩余重修机会</th>
+                  <th scope="col">生日</th>
+                  <th scope="col">入学时间</th>
+                  <th scope="col">专业</th>
+                  <th scope="col">学院</th>
+                  <th scope="col">算术平均gpa</th>
+                  <th scope="col">获奖情况</th>
+                  <th scope="col">处分情况</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <th scope="row">{{sinfo.id}}</th>
+                  <td>{{sinfo.password}}</td>
+                  <td id = 'img'>
+                    <button type="button" class="btn btn-info btn-sm" onclick='getimg(this, "{{sinfo.img}}");'>
+                        查看
+                    </button>
+                  </td>
+                  <td>{{sinfo.name}}</td>
+                  <td id = 'gender'>{{sinfo.gender}}</td>
+                  <td id = 'status'>{{sinfo.status}}</td>
+                  <td>{{sinfo.retake_chances}}</td>
+                  <td>{{sinfo.birthday}}</td>
+                  <td>{{sinfo.data_in}}</td>
+                  <td>{{sinfo.major}}</td>
+                  <td>{{sinfo.department}}</td>
+                  <td>{{sinfo.avg_gpa}}</td>
+                  <td>
+                    <button type="button" class="btn btn-info btn-sm" onclick='getinfo(this, "{{sinfo.prize}}");'>
+                        查看
+                    </button>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-info btn-sm" onclick='getinfo(this, "{{sinfo.punishment}}");'>
+                        查看
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+        </table>
+    </div>
+    <div class="modal fade modal-lg" id="grade_info_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">我的成绩</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" >
+                        <table class="table table-striped table-hover table-bordered border-primary">
+                            <thead>
+                            <tr>
+                                <th scope="col">学号</th>
+                                <th scope="col">姓名</th>
+                                <th scope="col">课程编号</th>
+                                <th scope="col">课程名</th>
+                                <th scope="col">成绩</th>
+                                <th scope="col">是否正在重修</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id = 'tbodygrade'>
+                            <input type="text" id="filtergrade" class="form-control" placeholder="输入关键词筛选">
+                            {% for i in ginfo %}
+                                <tr>
+                                    <th scope="row">{{i.id}}</th>
+                                    <td>{{i.sname}}</td>
+                                    <td>{{i.lid}}</td>
+                                    <td>{{i.lname}}</td>
+                                    <td>{{i.grade}}</td>
+                                    <td>{{i.is_retaking}}</td>
+                                    <td>
+                                        <form method = 'post' action='/userinfo/'>
+                                            {% csrf_token %}
+                                            <div class="form-group d-none">
+                                                <label>学号：</label>
+                                                <input type="text" value = '{{i.id}}' name = 'delete_sid'>
+                                            </div>
+                                            <div class="form-group d-none">
+                                                <label>课程号：</label>
+                                                <input type="text" value = '{{i.lid}}' name = 'delete_lid'>
+                                            </div>
+                                            <div class="form-group d-none">
+                                                <label>操作：</label>
+                                                <input type="text" value='delete', name = 'action'>
+                                            </div>
+                                            <input type="submit" value="放弃课程" class = "btn btn-danger">
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-lg" id="retake_info_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">重修</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" >
+                        <table class="table table-striped table-hover table-bordered border-primary">
+                            <thead>
+                            <tr>
+                                <th scope="col">学号</th>
+                                <th scope="col">姓名</th>
+                                <th scope="col">课程编号</th>
+                                <th scope="col">课程名</th>
+                                <th scope="col">成绩</th>
+                                <th scope="col">是否正在重修</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id = 'tbodyretake'>
+                            <input type="text" id="filterretake" class="form-control" placeholder="输入关键词筛选">
+                            {% for i in rinfo %}
+                                <tr>
+                                    <th scope="row">{{i.1}}</th>
+                                    <td>{{i.0}}</td>
+                                    <td>{{i.2}}</td>
+                                    <td>{{i.3}}</td>
+                                    <td>{{i.4}}</td>
+                                    <td>{{i.5}}</td>
+                                    <td>
+                                        <form method = 'post' action='/userinfo/'>
+                                            {% csrf_token %}
+                                            <div class="form-group d-none">
+                                                <label>学号：</label>
+                                                <input type="text" value = '{{i.1}}' name = 'retake_sid'>
+                                            </div>
+                                            <div class="form-group d-none">
+                                                <label>课程号：</label>
+                                                <input type="text" value = '{{i.2}}' name = 'retake_lid'>
+                                            </div>
+                                            <div class="form-group d-none">
+                                                <label>操作：</label>
+                                                <input type="text" value='retake', name = 'action'>
+                                            </div>
+                                            <input type="submit" value="重修课程" class = "btn btn-danger">
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-lg" id="lesson_info_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">选课</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" >
+                        <table class="table table-striped table-hover table-bordered border-primary">
+                            <thead>
+                            <tr>
+                                <th scope="col">课程编号</th>
+                                <th scope="col">课程名</th>
+                                <th scope="col">授课教师</th>
+                                <th scope="col">学分</th>
+                                <th scope="col">学时</th>
+                                <th scope="col">开课专业</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody id = 'tbodylesson'>
+                            <input type="text" id="filterlesson" class="form-control" placeholder="输入关键词筛选">
+                            {% for i in linfo %}
+                                <tr>
+                                    <th scope="row">{{i.0}}</th>
+                                    <td>{{i.1}}</td>
+                                    <td>{{i.2}}</td>
+                                    <td>{{i.3}}</td>
+                                    <td>{{i.4}}</td>
+                                    <td>{{i.5}}</td>
+                                    <td>
+                                        <form method = 'post' action='/userinfo/'>
+                                            {% csrf_token %}
+                                            <div class="form-group d-none">
+                                                <label>学号：</label>
+                                                <input type="text" value = '{{sinfo.id}}' name = 'select_sid'>
+                                            </div>
+                                            <div class="form-group d-none">
+                                                <label>课程号：</label>
+                                                <input type="text" value = '{{i.0}}' name = 'select_lid'>
+                                            </div>
+                                            <div class="form-group d-none">
+                                                <label>操作：</label>
+                                                <input type="text" value='select', name = 'action'>
+                                            </div>
+                                            <input type="submit" value="选课" class = "btn btn-primary">
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框的HTML结构 -->
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">消息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{msg}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="imgmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">照片</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body", id = 'imgbody' style = 'text-align:center; '>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="txtmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">信息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body", id = 'txtbody' style = 'text-align:center; '>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script>
+        function getimg(self, img){
+            $('#imgbody').html("<img src='../media/"+img+"' alt='img' class='img-fluid img-thumbnail' style = 'width: 300px; height: 300px'>" );
+            $('#imgmodal').modal('show');
+        }
+    </script>
+    <script>
+        function getinfo(self, info){
+            $('#txtbody').html(info);
+            $('#txtmodal').modal('show');
+        }
+    </script>
+    <script>
+        // JavaScript代码来初始化并显示模态框
+        document.addEventListener('DOMContentLoaded', function() {
+            if("{{sinfo.gender}}"=='True'){
+                $('#gender').text('男');
+            }
+            else{
+                $('#gender').text('女');
+            }
+            if("{{sinfo.status}}"==0){
+                $('#status').text('学业正常');
+            }
+            else if("{{sinfo.status}}"==1){
+                $('#status').text('警告');
+            
+            }
+            else{
+                $('#status').text('已毕业');
+            }
+            var msg = "{{msg}}";
+            if(msg!=''){
+                var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+                myModal.show();
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#filtergrade').on('input', function() {
+              var filterValue = $(this).val().toLowerCase(); // 获取筛选框的值并转换为小写
+          
+              $('#tbodygrade tr').each(function() {
+                var text = $(this).text().toLowerCase(); // 获取当前列表项的文本并转换为小写
+          
+                if (text.indexOf(filterValue) > -1) {
+                  $(this).show(); // 匹配到关键词则显示该列表项
+                } else {
+                  $(this).hide(); // 不匹配则隐藏该列表项
+                }
+              });
+            });
+          });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#filterlesson').on('input', function() {
+              var filterValue = $(this).val().toLowerCase(); // 获取筛选框的值并转换为小写
+          
+              $('#tbodylesson tr').each(function() {
+                var text = $(this).text().toLowerCase(); // 获取当前列表项的文本并转换为小写
+          
+                if (text.indexOf(filterValue) > -1) {
+                  $(this).show(); // 匹配到关键词则显示该列表项
+                } else {
+                  $(this).hide(); // 不匹配则隐藏该列表项
+                }
+              });
+            });
+          });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#filterretake').on('input', function() {
+              var filterValue = $(this).val().toLowerCase(); // 获取筛选框的值并转换为小写
+          
+              $('#tbodyretake tr').each(function() {
+                var text = $(this).text().toLowerCase(); // 获取当前列表项的文本并转换为小写
+          
+                if (text.indexOf(filterValue) > -1) {
+                  $(this).show(); // 匹配到关键词则显示该列表项
+                } else {
+                  $(this).hide(); // 不匹配则隐藏该列表项
+                }
+              });
+            });
+          });
+    </script>
+</body>
+</html>

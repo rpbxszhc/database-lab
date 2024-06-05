@@ -1,0 +1,9 @@
+django-admin startproject mysite
+python manage.py startapp app
+edit settings.py INSTALLED_APPS:add "app.apps.AppConfig"
+edit models.py   （数据库）
+create database   (mysql command line)
+edit settings.py:DATABASES
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
