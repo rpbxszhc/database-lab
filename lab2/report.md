@@ -362,9 +362,142 @@ DELIMITER ;
 
 [https://github.com/rpbxszhc/database-lab/tree/master/lab2](https://github.com/rpbxszhc/database-lab/tree/master/lab2)
 
-#### 目录
+#### 目录（[tree.txt](tree.txt)）
 
-> 使用tree命令获取文件结构，并在文件名后用 "-------注释" 解释文件功能
+```
+卷 Windows 的文件夹 PATH 列表
+卷序列号为 780E-653F
+C:.                                                                     -------根目录
+|   2_db-lab02.pptx                                                     -------实验文档
+|   e-r.drawio                                                          -------e-r作图文件
+|   e-r.svg                                                             -------e-r矢量图
+|   report.md                                                           -------实验报告markdown文件
+|   report.pdf                                                          -------实验报告pdf
+|   tree.txt                                                            -------文件结构
+|   ~$2_db-lab02.pptx                       
+|   学籍管理系统.pdf                                                     -------需求分析和e-r图pdf
+|   系统工作流程.drawio                                                  -------系统工作流程作图文件
+|   系统工作流程.svg                                                     -------系统工作流程矢量图
+|   系统模块结构.drawio                                                  -------系统模块结构作图文件
+|   系统模块结构.svg                                                     -------系统模块结构矢量图
+|   需求分析和e-r.md                                                     -------需求分析和e-r图markdown文件
+|   
++---img                                                                 -------实验报告引用的图片，主要是实验结果
+|       dep_manage_info.png
+|       filter_grade.png
+|       les_manage_info.png
+|       login.png
+|       logo.png
+|       major_manage_info.png
+|       quit_les.png
+|       quit_les_grade.png
+|       quit_les_retake_cnt.png
+|       retake_les.png
+|       retake_les_grade.png
+|       retake_les_retake.png
+|       select_les.png
+|       select_les_grade.png
+|       select_les_select.png
+|       stules_manage_post_edit_fail.png
+|       stules_manage_post_edit_ing.png
+|       stules_manage_post_edit_success.png
+|       stules_manage_pre_edit.png
+|       stules_manage_status_info.png
+|       stules_manage_status_stules.png
+|       stu_manage_create_ing.png
+|       stu_manage_delete_ing.png
+|       stu_manage_info.png
+|       stu_manage_post_create_img.png
+|       stu_manage_post_create_info.png
+|       stu_manage_post_delete_info.png
+|       stu_manage_post_delete_stules.png
+|       stu_manage_post_edit_info.png
+|       stu_manage_pre_delete_stules.png
+|       user_info.png
+|       
++---lab2                                                                -------workbench导入的相关sql语句
+|   \---db
+|           create_table.sql                                            -------无用
+|           datainsert.sql                                              -------插入实验测试数据
+|           function.sql                                                -------所有sql函数
+|           procedure.sql                                               -------所有存储过程
+|           tmp.sql                                                     -------在workbench中临时调用的sql语句，无用
+|           transaction.sql                                             -------所有事务
+|           trigger.sql                                                 -------所有触发器
+|           view.sql                                                    -------所有视图
+|           
+\---mysite                                                              -------django项目文件夹
+    |   format.txt                                                      -------项目实现流程
+    |   manage.py
+    |   
+    +---.idea
+    |       .gitignore
+    |       modules.xml
+    |       mysite.iml
+    |       vcs.xml
+    |       workspace.xml
+    |       
+    +---app
+    |   |   admin.py
+    |   |   apps.py
+    |   |   models.py                                                   -------包含所有数据库表与视图
+    |   |   tests.py
+    |   |   views.py                                                    -------所有后端逻辑实现
+    |   |   __init__.py
+    |   |   
+    |   +---migrations                                                  -------实验过程中在django中对数据库的修改
+    |   |   |   0001_initial.py
+    |   |   |   0002_department_major_stu_lesson_sl.py
+    |   |   |   0003_sl_info_alter_les_info_table.py
+    |   |   |   0004_alter_stu_img.py
+    |   |   |   __init__.py
+    |   |   |   
+    |   |   \---__pycache__
+    |   |           0001_initial.cpython-39.pyc
+    |   |           0002_department_major_stu_lesson_sl.cpython-39.pyc
+    |   |           0003_sl_info_alter_les_info_table.cpython-39.pyc
+    |   |           0004_alter_stu_img.cpython-39.pyc
+    |   |           __init__.cpython-39.pyc
+    |   |           
+    |   +---templates                                                   -------前端html文件
+    |   |       department.html
+    |   |       lesson.html
+    |   |       login.html
+    |   |       major.html
+    |   |       root.html
+    |   |       stules.html
+    |   |       user_info.html
+    |   |       
+    |   \---__pycache__
+    |           admin.cpython-39.pyc
+    |           apps.cpython-39.pyc
+    |           models.cpython-39.pyc
+    |           views.cpython-39.pyc
+    |           __init__.cpython-39.pyc
+    |           
+    +---media                                                           -------用于图片管理的文件，向此文件夹插入图片
+    |   \---photos
+    +---mysite
+    |   |   asgi.py
+    |   |   settings.py                                                 -------django配置文件
+    |   |   urls.py                                                     -------前端url与后端view中函数的映射文件
+    |   |   wsgi.py
+    |   |   __init__.py
+    |   |   
+    |   \---__pycache__
+    |           settings.cpython-39.pyc
+    |           urls.cpython-39.pyc
+    |           wsgi.cpython-39.pyc
+    |           __init__.cpython-39.pyc
+    |           
+    \---testimg                                                         -------提供测试图片管理的图片
+            boy.jpg
+            girl.jpg
+            
+
+```
+
+
 
 #### 实验代码
 
